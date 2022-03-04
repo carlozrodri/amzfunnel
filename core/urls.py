@@ -1,9 +1,6 @@
 from django.urls import path
-
-from . import views
-
+from .views import QuestionsAPIView
 
 urlpatterns = [
-    path('', views.snippet_list),
-    path('<int:pk>/', views.snippet_detail),
+    path('', QuestionsAPIView.as_view()),
 ]

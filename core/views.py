@@ -1,55 +1,14 @@
-from django.shortcuts import render
-from django.http import HttpResponse
-# parsing data from the client
-from rest_framework.parsers import JSONParser
-# To bypass having a CSRF token
-from django.views.decorators.csrf import csrf_exempt
-# for sending response to the client
-from django.http import HttpResponse, JsonResponse
-# API definition for Items
 from .serializers import SnippetSerializer
-# Items model
 from .models import ItemSizer
-@csrf_exempt
-def snippet_list(request):
-    """
-    List all code snippets, or create a new snippet.
-    """
-    if request.method == 'GET':
-        snippets = ItemSizer.objects.all()
-        serializer = SnippetSerializer(snippets, many=True)
-        return JsonResponse(serializer.data, safe=False)
+from rest_framework import generics
+from rest_framework import filters
 
-    elif request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = SnippetSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(serializer.data, status=201)
-        return JsonResponse(serializer.errors, status=400)
 
-@csrf_exempt
-def snippet_detail(request, pk):
-    """
-    Retrieve, update or delete a code snippet.
-    """
-    try:
-        snippet = ItemSizer.objects.get(pk=pk)
-    except ItemSizer.DoesNotExist:
-        return HttpResponse(status=404)
 
-    if request.method == 'GET':
-        serializer = SnippetSerializer(snippet)
-        return JsonResponse(serializer.data)
-
-    elif request.method == 'PUT':
-        data = JSONParser().parse(request)
-        serializer = SnippetSerializer(snippet, data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(serializer.data)
-        return JsonResponse(serializer.errors, status=400)
-
-    elif request.method == 'DELETE':
-        snippet.delete()
-        return HttpResponse(status=204)
+class QuestionsAPIView(generics.ListCreateAPIView):
+    queryset = ItemSizer.objects.all()
+    serializer_class = SnippetSerializer
+    search_fields = ['title']
+    filter_backends = (filters.SearchFilter,)
+    queryset = ItemSizer.objects.all()
+    serializer_class = SnippetSerializer

@@ -15,3 +15,6 @@ class ItemSizer(models.Model):
 
     class Meta:
         ordering = ['title']
+
+    def __str__(self):
+        return self.title
