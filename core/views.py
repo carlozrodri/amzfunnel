@@ -1,8 +1,8 @@
-from .serializers import SnippetSerializer
+from .serializers import SnippetSerializer, CategorySerializer
 from .models import ItemSizer, Categorias
 from rest_framework import generics
 from rest_framework import filters
-
+from rest_framework import viewsets
 
 
 class QuestionsAPIView(generics.ListCreateAPIView):
@@ -12,3 +12,8 @@ class QuestionsAPIView(generics.ListCreateAPIView):
     filter_backends = (filters.SearchFilter,)
     queryset = ItemSizer.objects.all()
     serializer_class = SnippetSerializer
+
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    serializer_class = CategorySerializer
+    queryset = Categorias.objects.all()

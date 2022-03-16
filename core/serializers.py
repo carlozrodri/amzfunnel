@@ -5,17 +5,15 @@ from .models import ItemSizer, Categorias
 
 
 class SnippetSerializer(serializers.HyperlinkedModelSerializer):
-
     queryset = Categorias.objects.all()
     category = serializers.SlugRelatedField(
         queryset=(queryset),
         slug_field='name'
     )
-    
+
     class Meta:
         model = ItemSizer
         fields = ['id', "title", "item_pictures", "item_description", "url_amazon", "category"]
-
 
     def create(self, validated_data):
         """
@@ -30,3 +28,9 @@ class SnippetSerializer(serializers.HyperlinkedModelSerializer):
         instance.title = validated_data.get('title', instance.title)
         instance.save()
         return instance
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Categorias
+        fields = ['name']
