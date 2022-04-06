@@ -1,8 +1,19 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
 db.sqlite3
 env/
 venv/
 core/migrations
 amzfunnel/__pycache__
 .env
+.venv
 static/
 data/
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
