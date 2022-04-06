@@ -3,3 +3,6 @@ env/
 venv/
 core/migrations
 amzfunnel/__pycache__
+.env
+static/
+data/
