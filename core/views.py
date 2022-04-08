@@ -1,5 +1,5 @@
-from .serializers import SnippetSerializer, CategorySerializer
-from .models import ItemSizer, Categorias
+from .serializers import SnippetSerializer, CategorySerializer, emailSerializer
+from .models import ItemSizer, Categorias, Email
 from rest_framework import generics, filters, viewsets
 
 
@@ -15,4 +15,8 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     search_fields = ['name']
     filter_backends = (filters.SearchFilter,)
     queryset = Categorias.objects.all()
-  
+
+class CreateView(generics.CreateAPIView):
+    queryset = Email.objects.all()
+    serializer_class = emailSerializer
+   
