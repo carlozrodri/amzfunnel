@@ -6,7 +6,6 @@ __pycache__/
 db.sqlite3
 env/
 venv/
-core/migrations
 amzfunnel/__pycache__
 .env
 .venv
