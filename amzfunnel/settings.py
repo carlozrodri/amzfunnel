@@ -29,11 +29,16 @@ SECRET_KEY = os.environ['SECRET_KEY']
 # SECRET_KEY = 'django-insecure-f&3o3hf)m)kf0hp-zs2zvab7-u4tx_rmu*s$y)g*-!5u+t)9q9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*','127.0.0.1',".herokuapp.com"]
 
-               
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+
 
 CORS_ORIGIN_ALLOW_ALL = True
 
