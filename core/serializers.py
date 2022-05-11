@@ -13,7 +13,7 @@ class SnippetSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = ItemSizer
-        fields = ['id', "item_pictures", "item_description", "url_amazon", "category"]
+        fields = ['id', "item_pictures", "item_description", "url_amazon", "category", "is_especial"]
 
 
 
