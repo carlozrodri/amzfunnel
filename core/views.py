@@ -9,7 +9,7 @@ class QuestionsAPIView(generics.ListAPIView):
     search_fields = ['category__name']
     filter_backends = (filters.SearchFilter,)
     queryset = ItemSizer.objects.all()
-
+    
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = CategorySerializer
     search_fields = ['name']

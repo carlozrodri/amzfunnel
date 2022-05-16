@@ -14,6 +14,8 @@ from pathlib import Path
 import os
 import dotenv
 
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 dotenv_file = os.path.join(BASE_DIR, '.env')
@@ -32,18 +34,14 @@ SECRET_KEY = os.environ['SECRET_KEY']
 DEBUG = False
 
 ALLOWED_HOSTS = ['*','127.0.0.1',".herokuapp.com"]
-
+## comementar para development
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 SECURE_SSL_REDIRECT = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
-
-
 CORS_ORIGIN_ALLOW_ALL = True
-
 CORS_ALLOW_CREDENTIALS = True
-# Application definition
+## comentar para development
 
 INSTALLED_APPS = [
     'django.contrib.admin',

@@ -2,7 +2,7 @@ from email.policy import default
 from django.db import models
 
 class Email(models.Model):
-    email = models.EmailField(max_length=100 , unique=True)
+    email = models.EmailField(max_length=100 , unique=True, blank=True, default='')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -26,6 +26,7 @@ class ItemSizer(models.Model):
     item_pictures = models.CharField(max_length=500, default='')
     item_description = models.CharField(max_length=100, default='')
     url_amazon = models.CharField(max_length=500, default='')
+    is_especial = models.BooleanField(default=False)
     category = models.ForeignKey(
         Categorias,
         on_delete=models.CASCADE)
