@@ -1,7 +1,7 @@
 from pyexpat import model
 # from unicodedata import category
 from rest_framework import serializers
-from .models import ItemSizer, Categorias, Email
+from .models import ItemSizer, Categorias, Email, ContactUs
 
 
 class SnippetSerializer(serializers.HyperlinkedModelSerializer):
@@ -33,10 +33,22 @@ class emailSerializer(serializers.ModelSerializer):
         """
         return Email.objects.create(**validated_data)
 
-    def update(self, instance, validated_data):
-        """
-        Update and return an existing `Snippet` instance, given the validated data.
-        """
-        instance.email = validated_data.get('email', instance.email)
-        instance.save()
-        return instance
+class contactUsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContactUs
+        fields = '__all__'
+        # depth = 2
+
+    # def create(self, validated_data):
+    #     """
+    #     Create and return a new `Snippet` instance, given the validated data.
+    #     """
+    #     return ContactUs.objects.create(**validated_data)
+
+    # def update(self, instance, validated_data):
+    #     """
+    #     Update and return an existing `Snippet` instance, given the validated data.
+    #     """
+    #     instance.email = validated_data.get('email', instance.email)
+    #     instance.save()
+    #     return instance

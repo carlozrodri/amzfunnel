@@ -5,6 +5,8 @@ class Email(models.Model):
     email = models.EmailField(max_length=100 , unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    class Meta:
+        ordering = ['-created_at']
 
     def __str__(self):
         return self.email
@@ -12,7 +14,8 @@ class Email(models.Model):
 
 
 class Categorias(models.Model):
-    name = models.CharField(max_length=200, blank=True, default='')
+    name = models.CharField(max_length=200, blank=True, default='')        
+    slug = models.SlugField(max_length=200, default='')
     class Meta:
         ordering = ['name']
 
@@ -35,3 +38,17 @@ class ItemSizer(models.Model):
 
     def __str__(self):
         return self.title
+
+class ContactUs(models.Model):
+    name = models.CharField(max_length=200, unique=True)
+    # author = models.ForeignKey(User, on_delete= models.CASCADE,related_name='blog_posts')
+    email =models.EmailField(max_length=100, unique=True, default='')
+    subject = models.CharField(max_length=200, default='')
+    content = models.TextField(max_length=900, unique=True, default='')
+    created_on = models.DateTimeField(auto_now_add=True)
+   
+    class Meta:
+        ordering = ['-created_on']
+
+    def __str__(self):
+        return self.name
