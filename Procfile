@@ -1,2 +1,1 @@
-release: python manage.py migrate
-web: gunicorn amzfunnel.wsgi
+web: python manage.py migrate && gunicorn mysite.wsgi
