@@ -1,7 +1,7 @@
 from pyexpat import model
 # from unicodedata import category
 from rest_framework import serializers
-from .models import ItemSizer, Categorias, Email, ContactUs
+from .models import Items, Categorias, Email, ContactUs
 
 
 class SnippetSerializer(serializers.HyperlinkedModelSerializer):
@@ -12,7 +12,7 @@ class SnippetSerializer(serializers.HyperlinkedModelSerializer):
     )
 
     class Meta:
-        model = ItemSizer
+        model = Items
         fields = ['id', "item_pictures", "item_description", "url_amazon", "category"]
 
 

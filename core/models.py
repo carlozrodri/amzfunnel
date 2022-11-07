@@ -14,16 +14,16 @@ class Email(models.Model):
 
 
 class Categorias(models.Model):
-    name = models.CharField(max_length=200, blank=True, default='')        
-    slug = models.SlugField(max_length=200, default='')
+    title = models.CharField(max_length=200, unique=True, default='')
+    slug = models.SlugField(max_length=200, unique=True)
     class Meta:
-        ordering = ['name']
+        ordering = ['title']
 
     def __str__(self):
-        return self.name
+        return self.title
 
 
-class ItemSizer(models.Model):
+class Items(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=100, blank=True, default='')
     item_pictures = models.CharField(max_length=500, default='')
