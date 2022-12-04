@@ -8,7 +8,7 @@ class SnippetSerializer(serializers.HyperlinkedModelSerializer):
     queryset = Categorias.objects.all()
     category = serializers.SlugRelatedField(
         queryset=(queryset),
-        slug_field='name'
+        slug_field='title'
     )
 
     class Meta:
@@ -20,7 +20,7 @@ class SnippetSerializer(serializers.HyperlinkedModelSerializer):
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Categorias
-        fields = ['name']
+        fields = ['title']
 
 class emailSerializer(serializers.ModelSerializer):
     class Meta:

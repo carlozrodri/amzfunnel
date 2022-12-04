@@ -5,7 +5,7 @@ from rest_framework import generics, filters, viewsets
 class QuestionsAPIView(generics.ListAPIView):
     queryset = Categorias.objects.all()
     serializer_class = SnippetSerializer
-    search_fields = ['category__name']
+    search_fields = ['category__title', 'id',]
     filter_backends = (filters.SearchFilter,)
     queryset = Items.objects.all()
 
