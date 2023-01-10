@@ -31,6 +31,8 @@ class Items(models.Model):
     item_pictures = models.CharField(max_length=500, default='')
     item_description = models.CharField(max_length=100, default='')
     url_amazon = models.CharField(max_length=500, default='')
+    is_especial = models.BooleanField(default=False)
+
     category = models.ForeignKey(
         Categorias,
         on_delete=models.CASCADE)
