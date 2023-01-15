@@ -5,10 +5,10 @@ from .models import Email, Items, Categorias, ContactUs
 admin.site.register(Categorias)
 admin.site.register(Items)
 admin.site.register(Email)
-admin.site.register(ContactUs)
 
 
-class ContactUs(admin.ModelAdmin):
+class ContactUs2(admin.ModelAdmin):
     list_display = ('name', 'email', 'created_on')
     
 
+admin.site.register(ContactUs, ContactUs2)

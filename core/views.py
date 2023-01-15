@@ -19,6 +19,6 @@ class CreateView(generics.CreateAPIView):
     queryset = Email.objects.all()
     serializer_class = emailSerializer
 
-class ContactUsView(generics.ListCreateAPIView):
+class ContactUsView(generics.CreateAPIView):
     queryset = ContactUs.objects.all()
     serializer_class = contactUsSerializer

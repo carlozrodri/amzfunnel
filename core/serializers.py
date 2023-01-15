@@ -39,6 +39,11 @@ class contactUsSerializer(serializers.ModelSerializer):
         fields = '__all__'
         # depth = 2
 
+    def create(self, validated_data):
+        """
+        Create and return a new `Snippet` instance, given the validated data.
+        """
+        return ContactUs.objects.create(**validated_data)
     # def create(self, validated_data):
     #     """
     #     Create and return a new `Snippet` instance, given the validated data.
