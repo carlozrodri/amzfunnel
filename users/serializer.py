@@ -12,7 +12,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
         # Add custom claims
         token['username'] = user.username
-        token['email'] = user.email
+        # token['email'] = user.email
        
         # usuario = eval(user.username)
         # print(usuario)
@@ -25,7 +25,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['first_name','last_name','email','username', 'password', 'password2']
+        fields = ['username', 'password', 'password2']
 
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:
@@ -37,9 +37,9 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.create(
             username=validated_data['username'],
-            first_name=validated_data['first_name'],
-            last_name=validated_data['last_name'],
-            email=validated_data['email'],
+            # first_name=validated_data['first_name'],
+            # last_name=validated_data['last_name'],
+            # email=validated_data['email'],
             )
   
         user.set_password(validated_data['password'])

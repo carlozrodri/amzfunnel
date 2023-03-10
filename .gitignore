@@ -2,7 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+/backup
 db.sqlite3
 env/
 venv/

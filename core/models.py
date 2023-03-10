@@ -15,7 +15,7 @@ class Email(models.Model):
 
 class Categorias(models.Model):
     title = models.CharField(max_length=200, unique=True, default='')
-    slug = models.SlugField(max_length=200, unique=True)
+    slug = models.SlugField(max_length=200, unique=True, default='')
     class Meta:
         ordering = ['title']
 
