@@ -56,3 +56,24 @@ class ContactUs(models.Model):
 
     def __str__(self):
         return self.email
+    
+
+class Urls(models.Model):  # Consider using singular for model names
+    url = models.URLField(unique=True, max_length=1000)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    last_scraped = models.DateTimeField(null=True, blank=True)
+    scraped = models.BooleanField(default=False, blank=True)  # Corrected the typo
+    product_name = models.CharField(max_length=200, blank=True, null=True)
+    product_description = models.TextField(blank=True, null=True)
+    product_price = models.CharField(max_length=100, blank=True, null=True)
+    product_image = models.URLField(blank=True, null=True)
+    product_category = models.ManyToManyField(Categorias, blank=True)  # Removed null=True
+
+    def __str__(self):
+        return self.url
+    
+    class Meta:
+        verbose_name = 'URL'
+        verbose_name_plural = 'URLs'
+        ordering = ['-created_at']

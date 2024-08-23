@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Email, Items, Categorias, ContactUs
+from .models import Email, Items, Categorias, ContactUs, Urls
 
 # Register your models here.
 admin.site.register(Categorias)
@@ -20,3 +20,32 @@ class ContactUs2(admin.ModelAdmin):
     
 
 admin.site.register(ContactUs, ContactUs2)
+
+
+# class UrlsAdmin(admin.ModelAdmin):
+#     list_display = ['url']
+#     search_fields = ['url']
+
+# admin.site.register(Urls, UrlsAdmin)
+# from .models import Urls
+
+class UrlsAdmin(admin.ModelAdmin):
+    list_display = ('url', 'created_at', 'updated_at', 'last_scraped', 'scraped', 'product_name', 'product_price')
+    search_fields = ('url', 'product_name', 'product_description', 'product_price')
+    list_filter = ('scraped', 'created_at', 'last_scraped', 'product_category')
+    fieldsets = (
+        (None, {
+            'fields': ('url', 'scraped', 'last_scraped')
+        }),
+        ('Product Information', {
+            'fields': ('product_name', 'product_description', 'product_price', 'product_image', 'product_category')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',),
+        }),
+    )
+    readonly_fields = ('created_at', 'updated_at')
+    ordering = ('-created_at',)
+
+admin.site.register(Urls, UrlsAdmin)
