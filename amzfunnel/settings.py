@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 import dotenv
 from datetime import timedelta
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -125,7 +126,7 @@ ROOT_URLCONF = 'amzfunnel.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -144,21 +145,30 @@ WSGI_APPLICATION = 'amzfunnel.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': os.environ['NAME_DB'],
+#         'USER': os.environ['USER_DB'],
+#         'PASSWORD': os.environ['PASSWORD_DB'],
+#         'HOST': os.environ['HOST_DB'],
+#         'PORT': os.environ['PORT_DB'],
+#     }
+# }
+
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ['NAME_DB'],
-        'USER': os.environ['USER_DB'],
-        'PASSWORD': os.environ['PASSWORD_DB'],
-        'HOST': os.environ['HOST_DB'],
-        'PORT': os.environ['PORT_DB'],
-    }
+    'default': dj_database_url.config(
+        default=os.getenv('DATABASE_URL')
+    )
 }
 
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         default='postgresql://postgres:DC1EDA4da34D2b36aC24fEE263c2gge5@192.168.1.188:5432/railway'
+#     )
+# }
 
-import dj_database_url
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
 
 # DATABASES = {
 #     'default': {
@@ -206,6 +216,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+TEMPLATE_DIR = os.path.join(BASE_DIR,"templates")
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 

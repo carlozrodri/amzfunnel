@@ -1,0 +1,18 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<h2>Change Category for selected Items</h2>
+<form method="post">
+    {% csrf_token %}
+    <div>
+        <label for="category">New Category:</label>
+        <select name="category" id="category">
+            {% for category in categories %}
+                <option value="{{ category.id }}">{{ category.title }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <input type="hidden" name="apply" value="yes">
+    <button type="submit" class="default">Apply</button>
+</form>
+{% endblock %}

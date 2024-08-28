@@ -29,16 +29,22 @@ class Items(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=100, blank=True, default='')
     item_pictures = models.CharField(max_length=500, default='')
-    item_description = models.CharField(max_length=100, default='')
+    item_description = models.CharField(max_length=100, default='', blank=True)
+    item_description1 = models.CharField(max_length=100, default='', blank=True)
+    item_description2 = models.CharField(max_length=100, default='', blank=True)
+    item_description3 = models.CharField(max_length=100, default='', blank=True)
     url_amazon = models.CharField(max_length=500, default='')
     is_especial = models.BooleanField(default=False)
+    asin = models.CharField(max_length=100, default='')
+    updated = models.DateTimeField(auto_now=True)
+
 
     category = models.ForeignKey(
         Categorias,
         on_delete=models.CASCADE)
 
     class Meta:
-        ordering = ['title']
+        ordering = ['updated']
 
     def __str__(self):
         return self.title
