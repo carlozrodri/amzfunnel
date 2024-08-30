@@ -1,5 +1,6 @@
 from email.policy import default
 from django.db import models
+from django.utils.text import slugify
 
 class Email(models.Model):
     email = models.EmailField(max_length=100 , unique=True)
@@ -28,6 +29,7 @@ class Categorias(models.Model):
 class Items(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=100, blank=True, default='')
+    slug = models.SlugField(max_length=50, unique=False, blank=True, null=True)  # Agregado
     item_pictures = models.CharField(max_length=500, default='')
     item_description = models.CharField(max_length=100, default='', blank=True)
     item_description1 = models.CharField(max_length=100, default='', blank=True)
@@ -37,18 +39,19 @@ class Items(models.Model):
     is_especial = models.BooleanField(default=False)
     asin = models.CharField(max_length=100, default='')
     updated = models.DateTimeField(auto_now=True)
-
-
-    category = models.ForeignKey(
-        Categorias,
-        on_delete=models.CASCADE)
+    category = models.ForeignKey(Categorias, on_delete=models.CASCADE)
 
     class Meta:
         ordering = ['updated']
 
+    def save(self, *args, **kwargs):
+        if not self.slug:  # Solo generar si el slug está vacío
+            truncated_title = self.title[:30]  # Tomar los primeros 30 caracteres del título
+            self.slug = slugify(truncated_title)  # Generar el slug
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.title
-
 class ContactUs(models.Model):
     name = models.CharField(max_length=200, default='')
     # author = models.ForeignKey(User, on_delete= models.CASCADE,related_name='blog_posts')
