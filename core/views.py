@@ -5,7 +5,7 @@ from rest_framework import generics, filters, viewsets
 class SearchCategory(generics.ListAPIView):
     queryset = Categorias.objects.all()
     serializer_class = SnippetSerializer
-    search_fields = ['category__title', 'id', 'title', 'item_description', 'item_description1', 'item_description2', 'item_description3']
+    search_fields = ['category__title', 'id', 'title', 'slug', 'item_description', 'item_description1', 'item_description2', 'item_description3']
     filter_backends = (filters.SearchFilter,)
     queryset = Items.objects.all()
 
