@@ -1,6 +1,16 @@
 from .serializers import SnippetSerializer, CategorySerializer, emailSerializer, contactUsSerializer
-from .models import Items, Categorias, Email, ContactUs
+from .models import Items, Categorias, Email, ContactUs, Urls
 from rest_framework import generics, filters, viewsets
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from core.tasks import scrape_urls_from_db_task
+from django.http import JsonResponse
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.decorators import permission_classes
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.decorators import authentication_classes
+
 
 class SearchCategory(generics.ListAPIView):
     queryset = Categorias.objects.all()
@@ -22,3 +32,29 @@ class CreateView(generics.CreateAPIView):
 class ContactUsView(generics.CreateAPIView):
     queryset = ContactUs.objects.all()
     serializer_class = contactUsSerializer
+
+from .serializers import UrlsSerializer
+# def trigger_scraping(request):
+#     # This triggers the task
+#     scrape_urls_from_db_task.delay()
+
+#     return JsonResponse({'status': 'Scraping started!'})
+@api_view(['GET', 'POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def urls_list_create(request):
+    if request.method == 'GET':
+        urls = Urls.objects.all()
+        serializer = UrlsSerializer(urls, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = UrlsSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            scrape_urls_from_db_task.delay()
+            return JsonResponse({'status': 'URL added!'})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+

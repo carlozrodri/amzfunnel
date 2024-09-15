@@ -1,7 +1,7 @@
 from pyexpat import model
 # from unicodedata import category
 from rest_framework import serializers
-from .models import Items, Categorias, Email, ContactUs
+from .models import Items, Categorias, Email, ContactUs, Urls
 
 
 class SnippetSerializer(serializers.HyperlinkedModelSerializer):
@@ -15,13 +15,33 @@ class SnippetSerializer(serializers.HyperlinkedModelSerializer):
         model = Items
         fields = ['id', "item_pictures", 'slug' , "item_description", "url_amazon", "category", "created", "updated", "title", "item_description1", "item_description2", "item_description3", "is_especial", "asin"]
 
-
+class UrlsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Urls
+        fields = ['id', 'url']  # Include the fields you want in the API
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Categorias
         fields = ['title', 'slug']
 
+# new serializers
+class CategoriaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Categorias
+        fields = ['id', 'title']
+
+class UrlsSerializer(serializers.ModelSerializer):
+    product_category = CategoriaSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Urls
+        fields = ['id', 'url', 'created_at', 'updated_at', 'last_scraped', 'scraped',
+                  'product_name', 'product_description', 'product_price',
+                  'product_image', 'product_category']
+
+
+# ------
 class emailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Email

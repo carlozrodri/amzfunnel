@@ -37,6 +37,7 @@ class Items(models.Model):
     item_description3 = models.CharField(max_length=100, default='', blank=True)
     url_amazon = models.CharField(max_length=500, default='')
     is_especial = models.BooleanField(default=False)
+    blog_post = models.BooleanField(default=False)
     asin = models.CharField(max_length=100, default='')
     updated = models.DateTimeField(auto_now=True)
     category = models.ForeignKey(Categorias, on_delete=models.CASCADE)

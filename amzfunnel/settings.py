@@ -66,7 +66,23 @@ INSTALLED_APPS = [
 MEDIA_URL = "/media/"
 
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
-
+# Celery settings
+# CELERY_BROKER_URL = 'redis://:GDs3q4HqYtQTrEWl9iCtpyibSH8bJqVKqYlFyHtkibk1WFROvHbk5wenI9AeSs8N@192.168.1.194:6379/0' # local
+CELERY_BROKER_URL = 'redis://default:ReXKWYdCtYMSkUrNXAEohQUguUATFmsz@junction.proxy.rlwy.net:14836' # RAILWAY
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+# CELERY_RESULT_BACKEND = 'redis://:GDs3q4HqYtQTrEWl9iCtpyibSH8bJqVKqYlFyHtkibk1WFROvHbk5wenI9AeSs8N@192.168.1.194:6379/0' # local
+CELERY_RESULT_BACKEND = 'redis://default:ReXKWYdCtYMSkUrNXAEohQUguUATFmsz@junction.proxy.rlwy.net:14836' # RAILWAY
+# CELERY_BEAT_SCHEDULE = {
+#     'scrape-every-5-minutes': {
+#         'task': 'your_app.tasks.scrape_urls_from_db_task',
+#         'schedule': 300.0,  # Scrapes every 5 minutes
+#     },
+# }
+CELERY_WORKER_CONCURRENCY = 4  # Adjust based on your needs
+CELERY_WORKER_PREFETCH_MULTIPLIER = 1
+CELERY_WORKER_MAX_TASKS_PER_CHILD = 100
+CELERY_TASK_RESULT_EXPIRES = 60  # Time in seconds (e.g., 1 hour)
 
 
 MIDDLEWARE = [
@@ -82,7 +98,7 @@ MIDDLEWARE = [
 
 ]
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=240),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=50),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
@@ -109,15 +125,18 @@ SIMPLE_JWT = {
     'JTI_CLAIM': 'jti',
 
     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
-    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
-    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=240),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=31),
 }
 
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 }
 
 

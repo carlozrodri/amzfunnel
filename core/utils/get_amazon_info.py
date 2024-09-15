@@ -31,13 +31,18 @@ class Scraper:
         self.driver = webdriver.Chrome(options=self.chrome_options)
 
     def scrape_data(self, url):
+        created = False
         try:
             # Open the webpage
             self.driver.get(url)
 
             # Extract the information using WebDriverWait for better reliability
-            titulo_raw = WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located((By.ID, 'productTitle'))).text
-            print("Titulo :"+titulo_raw[0:10])
+            # titulo_raw = None
+            try:
+                titulo_raw = WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located((By.ID, 'productTitle'))).text
+            except TimeoutException:
+                print("Product title not found within 10 seconds.")
+
             try: 
                 texto_raw1 = WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located((By.CSS_SELECTOR, '#feature-bullets > ul > li:nth-child(1) > span'))).text
             except:
@@ -96,9 +101,9 @@ class Scraper:
             item_description = truncate_text(texto_raw1 + texto_raw2)
 
             new_item = Items.objects.create(
-                title=titulo_raw,
+                title=titulo_raw[0:100],
                 item_pictures=image,
-                item_description=item_description,
+                item_description=item_description[0:100],
                 item_description1=texto_raw1[0:100],
                 item_description2=texto_raw2[0:100],
                 item_description3=texto_raw3[0:100],
@@ -138,7 +143,10 @@ class Scraper:
             # Optionally, log the full stack trace for debugging
             import traceback
             traceback.print_exc()
-            print(f"Data {'created' if created else 'updated'} successfully for URL:", titulo_raw)
+            if titulo_raw:
+                print(f"Data {'created' if created else 'updated'} successfully for URL:", titulo_raw)
+            else:
+                print("Data not found or not scraped successfully.")
 
             print("Data saved successfully for URL:", titulo_raw)
 
@@ -160,7 +168,7 @@ class Scraper:
         # Close the webdriver
         self.driver.quit()
 
-# Example usage:
-scraper = Scraper()
-# scraper.scrape_all_urls()  # Now this will scrape data for all URLs in the database
-scraper.close_driver()
+# # Example usage:
+# scraper = Scraper()
+# # scraper.scrape_all_urls()  # Now this will scrape data for all URLs in the database
+# scraper.close_driver()

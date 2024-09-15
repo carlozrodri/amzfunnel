@@ -8,16 +8,17 @@ import sys
 script_dir = os.path.dirname(os.path.abspath(__file__))
 project_dir = os.path.dirname(os.path.dirname(script_dir))
 sys.path.append(project_dir)
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'amzfunnel.settings')
 
 # Set the DJANGO_SETTINGS_MODULE to point to the settings modulos.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
   # Replace 'your_project_name' with the name of your Django project
 django.setup()
-from amazon.models import AmazonItem, Urls
+from core.models import Items, Urls
 from openai import OpenAI
-from docx import Document
+# from docx import Document
 from datetime import datetime
 from dotenv import load_dotenv
+from time import sleep
 
 
 
@@ -35,10 +36,12 @@ url = "https://api.openai.com/v1/chat/completions"
 # }
 
 # Fetch data from your Django model
-amazon_items = AmazonItem.objects.all()
+amazon_items = Items.objects.first(title='arai')
 content = ''
 for item in amazon_items:
     content += item.title + ' ' + item.text1 + ' ' + item.text2 + ' ' + item.text3 + ' ' + item.text4 + ' '
+    print(item.title)
+    sleep(10)
 
 # Concatenate the content from all AmazonItems into a single string
 completion = client.chat.completions.create(

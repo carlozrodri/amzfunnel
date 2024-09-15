@@ -1,17 +1,21 @@
+import base64
 import json
+from time import sleep
 import requests
 import uuid  # Import the uuid module for generating unique keys
 import re
 import os
 import django
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')  # Replace 'your_project_name' with the name of your Django project
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'amzfunnel.settings')  # Replace 'your_project_name' with the name of your Django project
 django.setup()
-from amazon.models import AmazonItem, Urls
+from core.models import Items, Urls
 from openai import OpenAI
-from docx import Document
+# from docx import Document
 from datetime import datetime
 from dotenv import load_dotenv
 from django.contrib.auth.models import User  # Adjust this import as per your Django model
+from io import BytesIO
+
 
 
 class BlogPostGenerator:
@@ -27,14 +31,51 @@ class BlogPostGenerator:
 
         # Initialize OpenAI client
         self.client = OpenAI(api_key=self.openai_api_key)
+    
+        def get_asset_from_url(self, url):
+            # Send a GET request to the URL
+            response = requests.get(url)
+            
+            # Check if the request was successful
+            if response.status_code == 200:
+                # Return a file-like object containing the content
+                return BytesIO(response.content)
+            else:
+                # Raise an error if the request failed
+                response.raise_for_status()
 
-    def fetch_amazon_items_content(self):
+        def create_json_payload_with_asset(url):
+            # Get the asset from the URL
+            asset = get_asset_from_url(url)
+            
+            # Convert the asset to Base64-encoded string
+            encoded_asset = base64.b64encode(asset.read()).decode('utf-8')
+            
+            # Create a JSON payload
+            payload = {
+                'filename': url.split('/')[-1],  # Extract filename from URL
+                'file_data': encoded_asset
+            }
+            
+            return json.dumps(payload)
+        
+
+    def fetch_items_for_blogs(self):
         # Fetch data from your Django model
-        amazon_items = AmazonItem.objects.all()
+
+        amazon_items = Items.objects.all() # Fetch the first item for demonstration purpos
+        print(f'Amazon Items: {amazon_items[0]}')
+
+    
+        title = amazon_items[0].title
+        item_image = amazon_items[0].item_pictures
+        # asset = get_asset_from_url(item_image)
+        # print(f'Amazon Items: {amazon_items}')
+        
 
         # Concatenate the content from all AmazonItems into a single string
-        content = ' '.join([f"{item.title} {item.text1} {item.text2} {item.text3} {item.text4}" for item in amazon_items])
-        return content
+        # content = ' '.join([f"{item.title} {item.text1} {item.text2} {item.text3} {item.text4}" for item in amazon_items])
+        return title, item_image
 
     def generate_blog_post(self, content):
         try:
@@ -95,11 +136,64 @@ class BlogPostGenerator:
         ],
         'markDefs': []  # Ensure markDefs is present even if empty
     }
-    for paragraph in paragraphs
-]
+    for paragraph in paragraphs]
 
         return text_blocks
+        
 
+    def send_asset(self, asset_url):
+        try:
+            # Retrieve the asset content from the provided URL
+            response = requests.get(asset_url)
+            if response.status_code != 200:
+                print(f"Failed to retrieve asset from {asset_url}")
+                return
+            
+            # Open image to verify its validity
+            try:
+                img = open(BytesIO(response.content))
+                img.verify()  # Verify image integrity
+            except (IOError, SyntaxError) as e:
+                print("Invalid image or unsupported format:", e)
+                return
+
+            # Prepare the asset for upload
+            asset = BytesIO(response.content)
+            filename = asset_url.split('/')[-1]
+
+            # Sanity API endpoint for asset uploads
+            url = f'https://{self.project_id}.api.sanity.io/v2021-06-07/assets/images/{self.dataset}'
+
+            # Define headers
+            headers = {
+                'Authorization': f'Bearer {self.sanity_api_key}'
+            }
+
+            # Determine Content-Type based on file extension
+            content_type = 'image/png'  # Default content type
+            if filename.lower().endswith('.jpg') or filename.lower().endswith('.jpeg'):
+                content_type = 'image/jpeg'
+            elif filename.lower().endswith('.gif'):
+                content_type = 'image/gif'
+
+            # Prepare files for the POST request
+            files = {
+                'file': (filename, asset, content_type)
+            }
+
+            # Send request to upload asset
+            response = requests.post(url, headers=headers, files=files)
+
+            # Check if the request was successful
+            if response.status_code == 200:
+                print('Asset uploaded successfully.')
+                # Parse and print the response content (which contains the asset reference)
+                print(response.json())
+            else:
+                print('Failed to upload asset:', response.content)
+
+        except Exception as e:
+            print("An error occurred during asset creation:", e)
     def create_draft_post(self, title, description, text_blocks):
         if not all([title, description, text_blocks]):
             print("Cannot create draft post. Missing required information.")
@@ -150,8 +244,11 @@ class BlogPostGenerator:
 # Example usage
 if __name__ == "__main__":
     blog_post_generator = BlogPostGenerator()
-    content = blog_post_generator.fetch_amazon_items_content()
-    completion = blog_post_generator.generate_blog_post(content)
+    content = blog_post_generator.fetch_items_for_blogs()
+    completion = blog_post_generator.generate_blog_post(content[0])
+    asset_url = content[1]
+    print(f'Asset URL: {asset_url}')
+    send_asset = blog_post_generator.send_asset(asset_url)
     if completion:
         title, description, rest_of_text = blog_post_generator.extract_blog_post_info(completion)
         text_blocks = blog_post_generator.create_paragraph_blocks(rest_of_text)
