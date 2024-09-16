@@ -39,22 +39,22 @@ class ContactUsView(generics.CreateAPIView):
 #     scrape_urls_from_db_task.delay()
 
 #     return JsonResponse({'status': 'Scraping started!'})
-@api_view(['GET', 'POST'])
-# @authentication_classes([JWTAuthentication])
-# @permission_classes([IsAuthenticated])
-def urls_list_create(request):
-    if request.method == 'GET':
-        urls = Urls.objects.all()
-        serializer = UrlsSerializer(urls, many=True)
-        return Response(serializer.data)
+# @api_view(['GET', 'POST'])
+# # @authentication_classes([JWTAuthentication])
+# # @permission_classes([IsAuthenticated])
+# def urls_list_create(request):
+#     if request.method == 'GET':
+#         urls = Urls.objects.all()
+#         serializer = UrlsSerializer(urls, many=True)
+#         return Response(serializer.data)
 
-    elif request.method == 'POST':
-        serializer = UrlsSerializer(data=request.data)
+#     elif request.method == 'POST':
+#         serializer = UrlsSerializer(data=request.data)
 
-        if serializer.is_valid():
-            serializer.save()
-            scrape_urls_from_db_task.delay()
-            return JsonResponse({'status': 'URL added!'})
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#         if serializer.is_valid():
+#             serializer.save()
+#             scrape_urls_from_db_task.delay()
+#             return JsonResponse({'status': 'URL added!'})
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
