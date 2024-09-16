@@ -9,6 +9,6 @@ urlpatterns = [
     path('', include(router.urls), name='categorias'),
     path('email', CreateView.as_view(), name='email'),
     path('contactus', ContactUsView.as_view(), name='contactus'),
-    path('categorias', CategoryViewSet.as_view({'get': 'list'})),
+    # path('categorias', CategoryViewSet.as_view({'get': 'list'})),
     # path('urls/', urls_list_create, name='urls_list_create'),
 ]

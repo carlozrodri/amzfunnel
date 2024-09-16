@@ -19,12 +19,16 @@ class SearchCategory(generics.ListAPIView):
     search_fields = ['category__title', 'id', 'title', 'slug', 'item_description', 'item_description1', 'item_description2', 'item_description3']
     filter_backends = (filters.SearchFilter,)
     queryset = Items.objects.all()
+    permission_classes = [AllowAny]  # Allow any user to access
+
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = CategorySerializer
     search_fields = ['name']
     filter_backends = (filters.SearchFilter,)
     queryset = Categorias.objects.all()
+    permission_classes = [AllowAny]  # Allow any user to access
+
 
 class CreateView(generics.CreateAPIView):
     queryset = Email.objects.all()
