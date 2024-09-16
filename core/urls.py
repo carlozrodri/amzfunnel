@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import SearchCategory, CategoryViewSet, CreateView, ContactUsView, urls_list_create
+from .views import SearchCategory, CategoryViewSet, CreateView, ContactUsView # urls_list_create
 from rest_framework import routers
 
 router = routers.DefaultRouter()
@@ -10,5 +10,5 @@ urlpatterns = [
     path('email', CreateView.as_view(), name='email'),
     path('contactus', ContactUsView.as_view(), name='contactus'),
     path('categorias', CategoryViewSet.as_view({'get': 'list'})),
-    path('urls/', urls_list_create, name='urls_list_create'),
+    # path('urls/', urls_list_create, name='urls_list_create'),
 ]
