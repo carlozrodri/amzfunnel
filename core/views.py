@@ -10,6 +10,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import permission_classes
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.decorators import authentication_classes
+from .serializers import UrlsSerializer
 
 
 class SearchCategory(generics.ListAPIView):
@@ -33,15 +34,14 @@ class ContactUsView(generics.CreateAPIView):
     queryset = ContactUs.objects.all()
     serializer_class = contactUsSerializer
 
-from .serializers import UrlsSerializer
 # def trigger_scraping(request):
 #     # This triggers the task
 #     scrape_urls_from_db_task.delay()
 
 #     return JsonResponse({'status': 'Scraping started!'})
 @api_view(['GET', 'POST'])
-@authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])
+# @authentication_classes([JWTAuthentication])
+# @permission_classes([IsAuthenticated])
 def urls_list_create(request):
     if request.method == 'GET':
         urls = Urls.objects.all()
