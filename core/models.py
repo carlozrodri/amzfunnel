@@ -3,7 +3,7 @@ from django.db import models
 from django.utils.text import slugify
 
 class Email(models.Model):
-    email = models.EmailField(max_length=100 , unique=True)
+    email = models.EmailField(max_length=100 , unique=True, blank=True, default='')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     class Meta:
