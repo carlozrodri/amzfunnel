@@ -31,9 +31,9 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'fallback_secret_key')
 # SECRET_KEY = 'django-insecure-f&3o3hf)m)kf0hp-zs2zvab7-u4tx_rmu*s$y)g*-!5u+t)9q9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['*','127.0.0.1',".herokuapp.com",'localhost','192.168.1.147']
+ALLOWED_HOSTS = ['*','127.0.0.1',".herokuapp.com",'localhost','192.168.1.147', 'vigilant-curiosity-production.up.railway.app']
 
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
