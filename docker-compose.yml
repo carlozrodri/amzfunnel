@@ -1,24 +1,55 @@
-version: "3.9"
-   
+version: '3.8'
+
 services:
-  db:
-    image: postgres
-    volumes:
-      - ./data/db:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    command: gunicorn amzfunnel.wsgi:application --bind 0.0.0.0:8000
     volumes:
-      - .:/code
+      - .:/app
     ports:
       - "8000:8000"
-    environment:
-      - POSTGRES_NAME=carlos
-      - POSTGRES_USER=carlozrodri
-      - POSTGRES_PASSWORD=pass12345
     depends_on:
-      - db
+      - redis
+ 
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - SECRET_KEY=${SECRET_KEY}
+
+    networks:
+      - backend
+
+
+  redis:
+    image: redis:6
+    networks:
+      - backend
+
+  celery:
+    build: .
+    command: celery -A amzfunnel worker -l info
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+
+    environment:
+      - CELERY_BROKER_URL=redis://default:ReXKWYdCtYMSkUrNXAEohQUguUATFmsz@junction.proxy.rlwy.net:14836
+      - CELERY_RESULT_BACKEND=redis://default:ReXKWYdCtYMSkUrNXAEohQUguUATFmsz@junction.proxy.rlwy.net:14836
+    networks:
+      - backend
+
+  celery-beat:
+    build: .
+    command: celery -A amzfunnel beat -l info
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+    networks:
+      - backend
+
+volumes:
+  postgres_data:
+
+networks:
+  backend:

@@ -1,12 +1,14 @@
 from django.urls import path, include
-from .views import QuestionsAPIView, CategoryViewSet, CreateView
+from .views import SearchCategory, CategoryViewSet, CreateView, ContactUsView, urls_list_create
 from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register(r'categorias', CategoryViewSet, 'categorias')
 urlpatterns = [
-    path('', QuestionsAPIView.as_view()),
-    path('', include(router.urls)),
-    path('email', CreateView.as_view()),
+    path('', SearchCategory.as_view(), name='search_category'),
+    path('', include(router.urls), name='categorias'),
+    path('email', CreateView.as_view(), name='email'),
+    path('contactus', ContactUsView.as_view(), name='contactus'),
     # path('categorias', CategoryViewSet.as_view({'get': 'list'})),
+    path('urls/', urls_list_create, name='urls_list_create'),
 ]
