@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 dotenv_file = os.path.join(BASE_DIR, '.env')
 if os.path.isfile(dotenv_file):
     dotenv.load_dotenv(dotenv_file)
-SECRET_KEY = os.environ['SECRET_KEY']
+SECRET_KEY = os.getenv('SECRET_KEY', 'fallback_secret_key')
 
 
 # Quick-start development settings - unsuitable for production
@@ -31,7 +31,7 @@ SECRET_KEY = os.environ['SECRET_KEY']
 # SECRET_KEY = 'django-insecure-f&3o3hf)m)kf0hp-zs2zvab7-u4tx_rmu*s$y)g*-!5u+t)9q9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
 ALLOWED_HOSTS = ['*','127.0.0.1',".herokuapp.com",'localhost','192.168.1.147']
 
@@ -176,11 +176,8 @@ WSGI_APPLICATION = 'amzfunnel.wsgi.application'
 # }
 
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL')
-    )
-}
+DATABASE_URL = os.getenv('DATABASE_URL')
+
 
 # DATABASES = {
 #     'default': dj_database_url.config(
