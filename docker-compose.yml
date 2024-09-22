@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    command: gunicorn amzfunnel.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    networks:
+      - backend
+
+
+  redis:
+    image: redis:6
+    networks:
+      - backend
+
+  celery:
+    build: .
+    command: celery -A amzfunnel worker -l info
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+
+    networks:
+      - backend
+
+  celery-beat:
+    build: .
+    command: celery -A amzfunnel beat -l info
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+    networks:
+      - backend
+
+volumes:
+  postgres_data:
+
+networks:
+  backend:

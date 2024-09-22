@@ -10,6 +10,10 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'amzfunnel.settings')
 django.setup()
 from core.models import Items, Categorias, Email, ContactUs, Urls
 from django.utils.text import slugify
+from selenium.webdriver.chromium.remote_connection import ChromiumRemoteConnection
+from selenium.webdriver import Remote, ChromeOptions
+
+SBR_WEBDRIVER = 'https://brd-customer-hl_e00dbd28-zone-scraping_browser:yji3598lhwcl@brd.superproxy.io:9515'
 
 def generate_affiliate_link(original_url, associate_id):
     # Extract the ASIN from the original URL
@@ -28,7 +32,11 @@ class Scraper:
     def __init__(self):
         self.chrome_options = Options()
         self.chrome_options.add_argument("--headless")  # Activate headless mode
-        self.driver = webdriver.Chrome(options=self.chrome_options)
+        self.chrome_options.add_argument(f"user-agent=Mozilla/5.0")  # Optional, avoid bot detection
+        sbr_connection = ChromiumRemoteConnection(SBR_WEBDRIVER, 'goog', 'chrome')
+
+
+        self.driver = Remote(sbr_connection, options=self.chrome_options)
 
     def scrape_data(self, url):
         created = False
