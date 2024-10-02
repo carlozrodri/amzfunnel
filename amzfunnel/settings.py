@@ -31,16 +31,22 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'fallback_secret_key')
 # SECRET_KEY = 'django-insecure-f&3o3hf)m)kf0hp-zs2zvab7-u4tx_rmu*s$y)g*-!5u+t)9q9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*','127.0.0.1',".herokuapp.com",'localhost','192.168.1.147', 'vigilant-curiosity-production.up.railway.app', 'api.top8.uk']
 
+# comementar para development
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
-SECURE_SSL_REDIRECT = False
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SOCIAL_AUTH_FIELDS_STORED_IN_SESSION = ['state']
+# ////////
+SECURE_SSL_REDIRECT = True  ## comment for development
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  ## comment for development
+SOCIAL_AUTH_REDIRECT_IS_HTTPS = True  # Set to True in production
 
-
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+# comment for development
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
