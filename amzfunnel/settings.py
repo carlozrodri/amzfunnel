@@ -33,7 +33,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'fallback_secret_key')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*','127.0.0.1',".herokuapp.com",'localhost','192.168.1.147', 'vigilant-curiosity-production.up.railway.app', 'api.top8.uk']
+ALLOWED_HOSTS = ['127.0.0.1','localhost','192.168.1.147', 'vigilant-curiosity-production.up.railway.app', 'api.top8.uk']
 
 # comementar para development
 CSRF_COOKIE_SECURE = True
