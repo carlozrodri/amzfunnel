@@ -48,9 +48,6 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 # comment for development
 
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True
-## comentar para development
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -73,12 +70,12 @@ MEDIA_URL = "/media/"
 
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 # Celery settings
-# CELERY_BROKER_URL = 'redis://:GDs3q4HqYtQTrEWl9iCtpyibSH8bJqVKqYlFyHtkibk1WFROvHbk5wenI9AeSs8N@192.168.1.194:6379/0' # local
-CELERY_BROKER_URL = 'redis://default:ReXKWYdCtYMSkUrNXAEohQUguUATFmsz@junction.proxy.rlwy.net:14836' # RAILWAY
+# CELERY_BROKER_URL = 'redis://:GDs3q4HqYtQTrEWl9iCtpyibSH8bJqVKqYlFyHtkibk1WFROvHbk5wenI9AeSs8N@192.168.1.194:6379/0' # Home Lab local
+CELERY_BROKER_URL =  os.getenv('CELERY_BROKER_URL') # RAILWAY
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
-# CELERY_RESULT_BACKEND = 'redis://:GDs3q4HqYtQTrEWl9iCtpyibSH8bJqVKqYlFyHtkibk1WFROvHbk5wenI9AeSs8N@192.168.1.194:6379/0' # local
-CELERY_RESULT_BACKEND = 'redis://default:ReXKWYdCtYMSkUrNXAEohQUguUATFmsz@junction.proxy.rlwy.net:14836' # RAILWAY
+# CELERY_RESULT_BACKEND = 'redis://:GDs3q4HqYtQTrEWl9iCtpyibSH8bJqVKqYlFyHtkibk1WFROvHbk5wenI9AeSs8N@192.168.1.194:6379/0' # Home Lab local
+CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND') # RAILWAY
 # CELERY_BEAT_SCHEDULE = {
 #     'scrape-every-5-minutes': {
 #         'task': 'your_app.tasks.scrape_urls_from_db_task',

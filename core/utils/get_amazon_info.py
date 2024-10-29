@@ -13,7 +13,7 @@ from django.utils.text import slugify
 from selenium.webdriver.chromium.remote_connection import ChromiumRemoteConnection
 from selenium.webdriver import Remote, ChromeOptions
 
-SBR_WEBDRIVER = 'https://brd-customer-hl_e00dbd28-zone-scraping_browser:yji3598lhwcl@brd.superproxy.io:9515'
+SBR_WEBDRIVER = os.environ.get("SBR_WEBDRIVER")
 
 def generate_affiliate_link(original_url, associate_id):
     # Extract the ASIN from the original URL
