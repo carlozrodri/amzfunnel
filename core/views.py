@@ -11,6 +11,8 @@ from rest_framework.decorators import permission_classes
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.decorators import authentication_classes
 from .serializers import UrlsSerializer
+from celery.result import AsyncResult
+
 
 
 class SearchCategory(generics.ListAPIView):
@@ -57,8 +59,18 @@ def urls_list_create(request):
 
         if serializer.is_valid():
             serializer.save()
-            scrape_urls_from_db_task.delay()
-            return JsonResponse({'status': 'URL added!'})
+            # Start the Celery task and get the task ID
+            task = scrape_urls_from_db_task.delay()
+            return JsonResponse({'status': 'URL added!', 'task_id': task.id})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+      
 
+@api_view(['GET'])
+def task_status(request, task_id):
+    task_result = AsyncResult(task_id)
+    urls = Urls.objects.all()
+    serializer = UrlsSerializer(urls, many=True)
+
+    return Response({
+        'status': task_result.status,
+                     })

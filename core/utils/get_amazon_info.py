@@ -12,8 +12,11 @@ from core.models import Items, Categorias, Email, ContactUs, Urls
 from django.utils.text import slugify
 from selenium.webdriver.chromium.remote_connection import ChromiumRemoteConnection
 from selenium.webdriver import Remote, ChromeOptions
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+from core import consumers
 
-SBR_WEBDRIVER = 'https://brd-customer-hl_e00dbd28-zone-scraping_browser:yji3598lhwcl@brd.superproxy.io:9515'
+SBR_WEBDRIVER = os.environ.get("SBR_WEBDRIVER")
 
 def generate_affiliate_link(original_url, associate_id):
     # Extract the ASIN from the original URL
@@ -33,10 +36,12 @@ class Scraper:
         self.chrome_options = Options()
         self.chrome_options.add_argument("--headless")  # Activate headless mode
         self.chrome_options.add_argument(f"user-agent=Mozilla/5.0")  # Optional, avoid bot detection
-        sbr_connection = ChromiumRemoteConnection(SBR_WEBDRIVER, 'goog', 'chrome')
 
+        # Connect to the remote browser        
+        # sbr_connection = ChromiumRemoteConnection(SBR_WEBDRIVER, 'goog', 'chrome')
+        # self.driver = Remote(sbr_connection, options=self.chrome_options)
 
-        self.driver = Remote(sbr_connection, options=self.chrome_options)
+        self.driver = webdriver.Chrome(options=self.chrome_options)
 
     def scrape_data(self, url):
         created = False
@@ -108,6 +113,7 @@ class Scraper:
             texto_raw2 = truncate_text(texto_raw2)
             item_description = truncate_text(texto_raw1 + texto_raw2)
 
+            
             new_item = Items.objects.create(
                 title=titulo_raw[0:100],
                 item_pictures=image,
@@ -122,6 +128,35 @@ class Scraper:
                 category=category_instance,
                 
             )
+
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                'scrape_status',
+                {
+                    'type': 'send_scrape_status',
+                    'data': {
+                        'status': 'completed',
+                        'title': titulo_raw,
+                        'description': item_description,
+                        'image': image,
+                        'category': category2,
+                        'url': generated_link,
+                        'asin': asin,
+
+
+                    }
+                }
+            )
+            consumers.send_scrape_status({
+                'status': 'completed',
+                'title': titulo_raw,    
+                'description': item_description,
+                'image': image,
+                'category': category2,
+                'url': generated_link,
+                'asin': asin,
+            })
+
             new_item.save()
             print("Data saved successfully for URL:", titulo_raw)
         # Create the Urls instance without assigning the ManyToManyField directly

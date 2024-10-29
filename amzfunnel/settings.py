@@ -31,26 +31,26 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'fallback_secret_key')
 # SECRET_KEY = 'django-insecure-f&3o3hf)m)kf0hp-zs2zvab7-u4tx_rmu*s$y)g*-!5u+t)9q9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','localhost','192.168.1.147', 'vigilant-curiosity-production.up.railway.app', 'api.top8.uk']
+ALLOWED_HOSTS = ['*', '127.0.0.1','localhost','192.168.1.147', 'vigilant-curiosity-production.up.railway.app', 'api.top8.uk']
 
-# comementar para development
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
-SOCIAL_AUTH_FIELDS_STORED_IN_SESSION = ['state']
-# ////////
-SECURE_SSL_REDIRECT = True  ## comment for development
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  ## comment for development
-SOCIAL_AUTH_REDIRECT_IS_HTTPS = True  # Set to True in production
-
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True
-# comment for development
+# # comementar para development
+# CSRF_COOKIE_SECURE = True
+# SESSION_COOKIE_SECURE = True
+# SOCIAL_AUTH_FIELDS_STORED_IN_SESSION = ['state']
+# # ////////
+# SECURE_SSL_REDIRECT = True  ## comment for development
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  ## comment for development
+# SOCIAL_AUTH_REDIRECT_IS_HTTPS = True  # Set to True in production
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-## comentar para development
+# # comment for development
+
+# CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ALLOW_CREDENTIALS = True
+# ## comentar para development
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -66,8 +66,11 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     'rest_framework_simplejwt.token_blacklist',
     'users',
+    'channels',
+
 
 ]
+ASGI_APPLICATION = 'amzfunnel.asgi.application'
 
 MEDIA_URL = "/media/"
 
